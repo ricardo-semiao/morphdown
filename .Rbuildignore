@@ -1,0 +1,9 @@
+^morphdown\.Rproj$
+^\.Rproj\.user$
+^personal/
+^LICENSE\.md$
+^README\.Rmd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^morphdown\.code-workspace

@@ -1,0 +1,19 @@
+Package: morphdown
+Title: Programmatically Change R Markdown Files
+Version: 0.0.0.9000
+Authors@R: 
+    person("Ricardo", "Semião", , "ricardo.semiao@outlook.com", role = c("aut", "cre"))
+Maintainer: Ricardo Semião e Castro <ricardo.semiao@outlook.com>
+Description: An R package to programmatically change the structure of R Markdown files.
+URL: https://https://github.com/ricardo-semiao/morphdown,
+    https://ricardo-semiao.github.io/morphdown/
+BugReports: https://github.com/ricardo-semiao/morphdown/issues
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+Imports:
+    magrittr,
+    purrr (>= 1.0.0),
+    rlang (>= 1.1.0),
+    stringr (>= 1.5.0)
