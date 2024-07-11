@@ -7,3 +7,4 @@
 ^docs$
 ^pkgdown$
 ^morphdown\.code-workspace
+^\.github$
