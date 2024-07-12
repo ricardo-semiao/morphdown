@@ -47,7 +47,7 @@ nav.navbar div.container div#navbar ul.navbar-nav a.nav-link {
     padding: 0;
 }
 nav.navbar div.container div#navbar > form {
-    margin-top: 2rem;
+    margin-top: 2rem !important;
 }
 .navbar-toggler {
     display: none;
