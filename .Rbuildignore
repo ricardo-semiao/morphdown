@@ -1,10 +1,12 @@
 ^morphdown\.Rproj$
 ^\.Rproj\.user$
-^personal/
+^personal$
 ^LICENSE\.md$
 ^README\.Rmd$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
-^morphdown\.code-workspace
+^morphdown\.code-workspace$
 ^\.github$
+^template$
+^site_assets$

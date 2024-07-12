@@ -1,3 +1,9 @@
 url: ~
 template:
   bootstrap: 5
+  includes:
+    in_header: <link href="/assets/morphdown_style.css" rel="stylesheet"/>
+  package: ricardosemiao
+#  navbar:
+#    structure:
+#      right: [search]
