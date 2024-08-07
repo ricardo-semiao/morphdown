@@ -1,8 +1,8 @@
 #' Split Rmd Into Sections and Blocks
 #'
-#' @name splitting 
+#' @name splitting
 #'
-#' @description 
+#' @description
 #' This function takes a path to an R Markdown (.Rmd) file or a string vector of
 #' text from an Rmd file, cleans it by replacing specified patterns, and then
 #' splits it into sections and blocks. The result makes it easy to refer to each
@@ -19,7 +19,7 @@
 #' @param split_args A list of 'splits' to separate the sections and blocks.
 #'  See the source code of `morphdown:::apply_splits` for the default splits,
 #'  and `morphdown:::split_match` to see how they work.
-#' 
+#'
 #' @return A named list of character vectors. Each vector is a section named
 #'  `s*`. Each section has blocks named `b*`. Use those names to refer to each
 #'  in the plan functions.
@@ -36,7 +36,7 @@ split_sections <- function(
   }
 
   apply_splits(doc_raw, split_sec_lim, split_args) %>%
-    split_match("^#", FALSE, FALSE) %>%
+    split_match(paste0("^#{1,", split_sec_lim, "} "), FALSE, FALSE) %>%
     purrr::map(function(sec) {
       is_head <- grepl("^#", sec)
       is_empty <- grepl("^$", sec)
@@ -69,14 +69,16 @@ split_match <- function(x, pattern, group, final) {
 # Apply an Ordered Succession of Splits to Character Vector
 #' @keywords internal
 apply_splits <- function(doc_raw, split_sec_lim, split_args) {
-  split_div_pat <- c(
-    paste0("^(:{", split_sec_lim, ",}|`{3}) *\\{.*\\}$"),
-    paste0("^(:{", split_sec_lim, ",}|`{3}) *$")
+  patterns <- c(
+    paste0("^#{1,", split_sec_lim, "} "),
+    paste0("^(:{1,3}|`{3}) *\\{.*\\}$"),
+    paste0("^(:{1,3}|`{3}) *$")
   )
+
   if (rlang::is_null(split_args)) {
     split_args <- list(
-      list(pat = "^#", grp = FALSE, final = FALSE),
-      list(pat = split_div_pat, grp = TRUE, final = TRUE),
+      list(pat = patterns[1], grp = FALSE, final = FALSE),
+      list(pat = patterns[2:3], grp = TRUE, final = TRUE),
       list(pat = "^[ \t]*([-+] )|([0-9]+\\. )", grp = TRUE, final = TRUE),
       list(pat = NA, grp = FALSE, final = TRUE)
     )
@@ -96,7 +98,7 @@ apply_splits <- function(doc_raw, split_sec_lim, split_args) {
 
 #' Split Character Vector By Punctuation
 #' @keywords internal
-split_clauses <- function(x, pattern = "(?<=[\\.;!?])") {
+split_clauses <- function(x, pattern) {
   x %>%
   stringr::str_split_1(pattern) %>%
   stringr::str_trim() %>%

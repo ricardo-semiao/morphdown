@@ -1,5 +1,10 @@
 /* Two columns content to fit new navbar */
-main#pkgdown-content {
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+#site-main {
     display: flex;
     flex-direction: row;
 }
@@ -59,22 +64,15 @@ nav.navbar div.container small.nav-text {
 }
 
 
-
 /* Adjust site constructs */
 header#site-header {
     margin-bottom: 0;
     min-width: calc(150px + 250px + 10px);
 }
 footer#site-footer {
-    margin: 0;
+    margin-bottom: 0;
     min-width: calc(150px + 250px + 10px);
 }
-.container.template-home {
-    margin-bottom: calc(21px + 16px + 8px);
-}
-/*.fixed-top {
-    z-index: initial;
-} unneeded with static approach*/
 
 
 /* General margins and paddings */
@@ -86,4 +84,10 @@ main#main .page-header {
 }
 main#main h2 {
     margin-top: 2rem;
+}
+#site-main > div.container {
+    margin-bottom: 1.5rem;
+}
+button.nav-link {
+    color: var(--green);
 }

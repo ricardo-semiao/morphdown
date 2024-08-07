@@ -1,39 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://ricardo-semiao.github.io/morphdown/404.html</loc>
-  </url>
-  <url>
-    <loc>https://ricardo-semiao.github.io/morphdown/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://ricardo-semiao.github.io/morphdown/index.html</loc>
-  </url>
-  <url>
-    <loc>https://ricardo-semiao.github.io/morphdown/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://ricardo-semiao.github.io/morphdown/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://ricardo-semiao.github.io/morphdown/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://ricardo-semiao.github.io/morphdown/reference/editing.html</loc>
-  </url>
-  <url>
-    <loc>https://ricardo-semiao.github.io/morphdown/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://ricardo-semiao.github.io/morphdown/reference/morphdown-package.html</loc>
-  </url>
-  <url>
-    <loc>https://ricardo-semiao.github.io/morphdown/reference/planning.html</loc>
-  </url>
-  <url>
-    <loc>https://ricardo-semiao.github.io/morphdown/reference/splitting.html</loc>
-  </url>
-  <url>
-    <loc>https://ricardo-semiao.github.io/morphdown/reference/split_clauses.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://ricardo-semiao.github.io/morphdown/404.html</loc></url>
+<url><loc>https://ricardo-semiao.github.io/morphdown/authors.html</loc></url>
+<url><loc>https://ricardo-semiao.github.io/morphdown/index.html</loc></url>
+<url><loc>https://ricardo-semiao.github.io/morphdown/LICENSE-text.html</loc></url>
+<url><loc>https://ricardo-semiao.github.io/morphdown/LICENSE.html</loc></url>
+<url><loc>https://ricardo-semiao.github.io/morphdown/news/index.html</loc></url>
+<url><loc>https://ricardo-semiao.github.io/morphdown/reference/editing.html</loc></url>
+<url><loc>https://ricardo-semiao.github.io/morphdown/reference/index.html</loc></url>
+<url><loc>https://ricardo-semiao.github.io/morphdown/reference/morphdown-package.html</loc></url>
+<url><loc>https://ricardo-semiao.github.io/morphdown/reference/planning.html</loc></url>
+<url><loc>https://ricardo-semiao.github.io/morphdown/reference/splitting.html</loc></url>
+<url><loc>https://ricardo-semiao.github.io/morphdown/reference/split_clauses.html</loc></url>
 </urlset>
+

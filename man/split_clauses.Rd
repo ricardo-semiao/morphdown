@@ -4,7 +4,7 @@
 \alias{split_clauses}
 \title{Split Character Vector By Punctuation}
 \usage{
-split_clauses(x, pattern = "(?<=[\\\\.;!?])")
+split_clauses(x, pattern)
 }
 \description{
 Split Character Vector By Punctuation

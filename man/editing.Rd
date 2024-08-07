@@ -5,24 +5,55 @@
 \alias{e}
 \alias{div}
 \alias{add_cur_head}
+\alias{add_custom}
+\alias{add_pause}
+\alias{add_br}
 \title{Edit Blocks}
 \usage{
-e(cs = NULL, subs = NULL, pat = NULL)
+e(
+  cs = NULL,
+  end = "pbr",
+  breaks = NULL,
+  adds = NULL,
+  subs = NULL,
+  pat = "(?<=[\\\\.:;!?])(?<!\\\\{\\\\.)",
+  sep = add_pause()
+)
 
-div()
+div(cs = TRUE, end = "p", breaks = NULL, sep = add_pause())
 
 add_cur_head(n = NULL)
+
+add_custom(x, end = "pbr")
+
+add_pause(br = TRUE)
+
+add_br()
 }
 \arguments{
-\item{cs}{Integer vector of clauses to keep. Defaults to all.}
+\item{cs}{Integer vector of clauses (for \code{e}) or lines (for \code{div}) to keep.
+Defaults to all.}
 
-\item{subs}{Character vector specifying substitutions for the final
-punctuation on each clause in \code{cs}. Defaults to none.}
+\item{end}{Character specifying what to add at the end of the block: \code{'pbr'}
+for \code{add_pause()} (the default); \code{'p'} for \code{add_pause(FALSE)}, and \code{'br'}
+for \code{add_br()}.}
+
+\item{breaks}{Indexes to insert \code{sep}.}
+
+\item{adds, subs}{Character vector specifying additions or substitutions
+(respectively) on the final punctuation of each clause in \code{cs}. Defaults to
+none.}
 
 \item{pat}{The pattern to break expressions into clauses. Defaults to
 \code{"(?<=[\\\\.:;!?])"}.}
 
+\item{sep}{What to add after the indexes specified by \code{breaks}.}
+
 \item{n}{The heading level to use.}
+
+\item{x}{The custom text to add.}
+
+\item{br}{Should a \code{'<br>'} be added after the pause?}
 }
 \description{
 These functions are assigned to blocks inside \verb{plan_sec(}b* = fun(...)\verb{)}.
@@ -31,9 +62,10 @@ adds new markdown content.
 \itemize{
 \item \code{e} is used on single element blocks ('text expressions'). It splits the
 expression into clauses, and allows the user to select and alter each.
-\item \code{div} is used on multi-element blocks. Currently, it returns the block
-as is.
+\item \code{div} is used on multi-line blocks.
 \item \code{add_cur_head} adds the heading of the current section, with the specified
 level.
+\item \code{add_pause} adds \code{'. . .'} and \code{add_br} adds \code{'<br>'}.
+\item \code{add_custom} adds any custom text.
 }
 }
