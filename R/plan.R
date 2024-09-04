@@ -28,24 +28,25 @@
 #' @return For `plan_doc`, a character vector containing the processed document.
 #'  `plan_sec` should not be used outside `plan_doc`.
 #' @export
-plan_doc <- function(sections, level_add = 0, ...) {
+plan_doc <- function(sections, ..., level_add = 0) {
   s_plans <- rlang::enexprs(...)
 
   result_doc <- list()
   for (s in seq_along(s_plans)) {
     sec <- names(s_plans)[s]
-    sections[[s]]$head <- head_rmv(sections[[s]]$head, level_add)
+    sections[[s]]$head1 <- head_rmv(sections[[s]]$head1, level_add)
     result_doc[[s]] <- eval(s_plans[[s]])
   }
 
-  raw <- paste0(unlist(result_doc), collapse = "\n")
-  final <- gsub("(\\. \\. \\.)(\\n)*(<br>)?(\\n)*#", "#", raw)
+  unlist(result_doc) %>%
+    paste0(collapse = "\n") %>%
+    gsub("(\\. \\. \\.)(\\n)*(<br>)?(\\n)*#", "#", .)
 }
 
 
 #' @rdname planning
 #' @export
-plan_sec <- function(head_level = NULL, ...) {
+plan_sec <- function(..., head_level = 2) {
   b_plans <- rlang::enexprs(...)
   sec <- rlang::caller_env()$sec
   sections <- rlang::caller_env()$sections

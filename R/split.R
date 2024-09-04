@@ -40,7 +40,7 @@ split_sections <- function(
     purrr::map(function(sec) {
       is_head <- grepl("^#", sec)
       is_empty <- grepl("^$", sec)
-      names(sec)[is_head] <- "head"
+      names(sec)[is_head] %<>% {paste0("head", seq_along(.))}
       names(sec)[is_empty] %<>% {paste0("empty", seq_along(.))}
       names(sec)[!(is_head | is_empty)] %<>% {paste0("b", seq_along(.))}
       sec
@@ -50,17 +50,24 @@ split_sections <- function(
 
 # Split Character Vector Into List Based on Match
 #' @keywords internal
-split_match <- function(x, pattern, group, final) {
-  match <- if (length(pattern) == 1) {
+split_match <- function(x, pattern, group, final, equal = FALSE) {
+  get_final <- \(x) if (final) grepl(pattern[[1]], x[[1]]) else FALSE
+
+  match <- if (!equal && length(pattern) == 1) {
     if (is.na(pattern)) rep(TRUE, length(x)) else grepl(pattern, x)
   } else {
     open <- grepl(pattern[[1]], x)
-    close <- grepl(pattern[[2]], x)
+    if (equal) {
+      close <- open
+      close[cumsum(close) %% 2 != 0] <- 0
+      open[cumsum(open) %% 2 == 0] <- 0
+    } else {
+      close <- grepl(pattern[[2]], x)
+    }
     cumsum(open - c(0, close[-length(close)])) > 0
   }
 
   match_fct <- if (group) abs(c(1, diff(match))) else match
-  get_final <- \(x) if (final) grepl(pattern[[1]], x[[1]]) else FALSE
   split(x, cumsum(match_fct)) %>%
     purrr::map(~structure(.x, is_final = get_final(.x)))
 }
@@ -69,36 +76,36 @@ split_match <- function(x, pattern, group, final) {
 # Apply an Ordered Succession of Splits to Character Vector
 #' @keywords internal
 apply_splits <- function(doc_raw, split_sec_lim, split_args) {
-  patterns <- c(
+  patterns <- list(
     paste0("^#{1,", split_sec_lim, "} "),
-    paste0("^(:{1,3}|`{3}) *\\{.*\\}$"),
-    paste0("^(:{1,3}|`{3}) *$")
+    c("^(:{1,3}|`{3}) *\\{.*\\}$", "^(:{1,3}|`{3}) *$"),
+    "^-{2}[- ]*$",
+    "^[ \t]*([-+*] )|([0-9]+\\. )"
   )
 
-  if (rlang::is_null(split_args)) {
-    split_args <- list(
-      list(pat = patterns[1], grp = FALSE, final = FALSE),
-      list(pat = patterns[2:3], grp = TRUE, final = TRUE),
-      list(pat = "^[ \t]*([-+] )|([0-9]+\\. )", grp = TRUE, final = TRUE),
-      list(pat = NA, grp = FALSE, final = TRUE)
-    )
-  }
+  split_args <- split_args %||% list(
+    list(pat = patterns[[1]], grp = FALSE, final = FALSE, equal = FALSE),
+    list(pat = patterns[[2]], grp = TRUE, final = TRUE, equal = FALSE),
+    list(pat = patterns[[3]], grp = TRUE, final = TRUE, equal = TRUE),
+    list(pat = patterns[[4]], grp = TRUE, final = TRUE, equal = FALSE),
+    list(pat = NA, grp = FALSE, final = TRUE, equal = FALSE)
+  )
 
   splits <- list(structure(doc_raw, is_final = FALSE))
   for (args in split_args) {
     for (i in seq_along(splits)) {
       if (!attr(splits[[i]], "is_final")) {
-        splits[[i]] <- split_match(splits[[i]], args$pat, args$grp, args$final)
+        splits[[i]] <- split_match(splits[[i]], args$pat, args$grp, args$final, args$equal)
       }
     }
     splits <- purrr::list_flatten(splits)
   }
-  splits
+  purrr::map_if(splits, ~length(.x) == 1 && !(.x == "" || grepl("^#", .x)), split_clauses)
 }
 
 #' Split Character Vector By Punctuation
 #' @keywords internal
-split_clauses <- function(x, pattern) {
+split_clauses <- function(x, pattern = "((?<=[\\.:;!?]))(?<!\\{\\.)") {
   x %>%
   stringr::str_split_1(pattern) %>%
   stringr::str_trim() %>%
