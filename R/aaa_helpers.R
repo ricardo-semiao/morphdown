@@ -1,6 +1,6 @@
 utils::globalVariables(".") # Remove CRAN note towards the magrittr dot
 
-head_rmv <- function(x, n) {
+adjust_head_level <- function(x, n) {
   stringr::str_replace(x, paste0("#{", n,"}"), "")
 }
 
@@ -10,7 +10,7 @@ is_path <- function(x) {
 
 append_vec <- function(x, values, afters, n = 1) {
   id <- seq_along(x)
-  for (i in seq_along(values)) {
+  for (i in seq_along(values)) { #if values has two elements, add before and after
     x <- c(as.list(x), purrr::map(afters, ~values[[i]]))
     id  <- c(id, afters + if (i == 1) 0.5 + n - 1 else if (i == 2) -0.5)
   }
@@ -27,3 +27,5 @@ get_end <- function(end) {
     "none" = NULL
   )[[end]]
 }
+
+

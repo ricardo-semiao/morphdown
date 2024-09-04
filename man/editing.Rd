@@ -11,45 +11,64 @@
 \title{Edit Blocks}
 \usage{
 e(
-  cs = NULL,
+  keep = TRUE,
   end = "pbr",
   breaks = NULL,
   adds = NULL,
   subs = NULL,
-  pat = "(?<=[\\\\.:;!?])(?<!\\\\{\\\\.)",
-  sep = add_pause()
+  modify = function(x) paste(x, collapse = " "),
+  sep = add_pause(),
+  sep_n = 1
 )
 
-div(cs = TRUE, end = "p", breaks = NULL, sep = add_pause())
+div(
+  keep = TRUE,
+  end = "pbr",
+  breaks = NULL,
+  adds = NULL,
+  subs = NULL,
+  modify = function(x) x,
+  sep = add_pause(),
+  sep_n = 1,
+  sep_fragment = FALSE
+)
 
-add_cur_head(n = NULL)
+add_cur_head(n = 2)
 
 add_custom(x, end = "pbr")
 
-add_pause(br = TRUE)
+add_pause(br = TRUE, trailing = TRUE)
 
-add_br()
+add_br(trailing = TRUE)
 }
 \arguments{
-\item{cs}{Integer vector of clauses (for \code{e}) or lines (for \code{div}) to keep.
-Defaults to all.}
+\item{keep}{Indexes of the clauses (for \code{e}) or lines (for \code{div}) to keep.
+Defaults to all (\code{TRUE}).}
 
-\item{end}{Character specifying what to add at the end of the block: \code{'pbr'}
-for \code{add_pause()} (the default); \code{'p'} for \code{add_pause(FALSE)}, and \code{'br'}
-for \code{add_br()}.}
+\item{end}{Character specifying what to add at the end of the block:
+\itemize{
+\item \code{'pbr'} for \code{add_pause()} (the default);
+\item \code{'p'} for \code{add_pause(FALSE)};
+\item \code{'br'} for \code{add_br()};
+\item \code{'lb'} for \code{''} (an empty line);
+\item \code{'none'} for \code{NULL} (nothing).
+}}
 
-\item{breaks}{Indexes to insert \code{sep}.}
+\item{breaks}{Indexes to insert \code{sep} after.}
 
 \item{adds, subs}{Character vector specifying additions or substitutions
-(respectively) on the final punctuation of each clause in \code{cs}. Defaults to
-none.}
-
-\item{pat}{The pattern to break expressions into clauses. Defaults to
-\code{"(?<=[\\\\.:;!?])"}.}
+(respectively) on the final punctuation of each clause in \code{keep}. Defaults
+to none (\code{NULL}).}
 
 \item{sep}{What to add after the indexes specified by \code{breaks}.}
 
-\item{n}{The heading level to use.}
+\item{sep_n}{Add \code{sep} after the break + \code{sep_n} elements.}
+
+\item{sep_fragment}{Instead of \code{sep}, should the elements specified by
+\code{breaks} be encapsulated in a ".fragment" markdown block? (for revealjs).}
+
+\item{n}{The heading level to use. Set to \code{NA} to ommit. Set to \code{NULL} to
+use the existing heading level.}
 
 \item{x}{The custom text to add.}
 
@@ -60,12 +79,11 @@ These functions are assigned to blocks inside \verb{plan_sec(}b* = fun(...)\verb
 See \link[morphdown]{planning}. \code{e} and \code{div} edit existing blocks, the rest
 adds new markdown content.
 \itemize{
-\item \code{e} is used on single element blocks ('text expressions'). It splits the
-expression into clauses, and allows the user to select and alter each.
-\item \code{div} is used on multi-line blocks.
+\item \code{e} is used on single-lines of text, that have been split into clauses.
+\item \code{div} is used on multi-line blocks of text, that have been split by lines.
 \item \code{add_cur_head} adds the heading of the current section, with the specified
 level.
-\item \code{add_pause} adds \code{'. . .'} and \code{add_br} adds \code{'<br>'}.
 \item \code{add_custom} adds any custom text.
+\item \code{add_pause} adds \code{'. . .'} and \code{add_br} adds \code{'<br>'}.
 }
 }

@@ -2,6 +2,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
+#' @importFrom glue glue
 #' @importFrom magrittr %<>%
 #' @importFrom magrittr %>%
 #' @importFrom rlang %||%
