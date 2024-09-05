@@ -23,7 +23,7 @@ get_end <- function(end) {
     "pbr" = add_pause(),
     "p" = add_pause(FALSE),
     "br" = add_br(),
-    "lb" = "",
+    "lb" = "\n\n",
     "none" = NULL
   )[[end]]
 }

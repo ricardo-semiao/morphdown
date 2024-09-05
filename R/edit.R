@@ -49,13 +49,10 @@ e <- function(
   kept <- subs_and_adds(kept, adds, subs)
 
   if (!rlang::is_null(breaks)) {
-    values <- paste0(c(sep, ""), collapse = "\n")
-    kept <- append_vec(kept, values, breaks, sep_n)
+    kept <- append_vec(kept, sep, breaks, sep_n)
   }
 
-  modify(kept) %>%
-    `if`(rlang::is_null(breaks), paste0(., collapse = ""), .) %>% #if no line added, rejoin clauses
-    c(get_end(end))
+  paste0(paste0(modify(kept), collapse = ""), get_end(end)) #rejoin clauses
 }
 
 
@@ -72,15 +69,12 @@ div <- function(
   kept <- subs_and_adds(kept, adds, subs)
 
   if (!rlang::is_null(breaks)) {
-    values <- if (sep_fragment) { #add .fragment (pause) encapsuling each break
-      c(":::::\n", "\n:::::{.fragment}")
-    } else {
-      paste0(c("\n", sep, "\n"), collapse = "")
-    }
+    #add .fragment (pause) encapsuling each break
+    values <- if (sep_fragment) c(":::::\n", "\n:::::{.fragment}") else sep
     kept <- append_vec(kept, values, breaks, n = sep_n)
   }
 
-  c(modify(kept), get_end(end))
+  paste0(paste0(modify(kept), collapse = "\n"), get_end(end))
 }
 
 
@@ -93,30 +87,30 @@ add_cur_head <- function(n = 2) {
   if (rlang::is_na(n)) {
     ""
   } else if (rlang::is_null(n)) {
-    c(cur_head, "")
+    paste0(cur_head, "\n")
   } else {
-    c(stringr::str_replace(cur_head, "^#+", strrep("#", n)), "")
+    paste0(stringr::str_replace(cur_head, "^#+", strrep("#", n)), "\n")
   }
 }
 
 #' @rdname editing
 #' @export
 add_custom <- function(x, end = "pbr") {
-  c(x, get_end(end))
+  paste0(x, get_end(end))
 }
 
 #' @rdname editing
 #' @export
 add_pause <- function(br = TRUE, trailing = TRUE) {
-  base <- c(". . .", "", if (br) add_br(FALSE))
-  if (trailing) c("", base) else base
+  base <- paste0(". . .\n\n", if (br) add_br(FALSE))
+  if (trailing) paste0("\n\n", base) else base
 }
 
 #' @rdname editing
 #' @export
 add_br <- function(trailing = TRUE) {
-  base <- c("<br>", "")
-  if (trailing) c("", base) else base
+  base <- c("<br>\n\n")
+  if (trailing) paste0("\n\n", base) else base
 }
 
 
