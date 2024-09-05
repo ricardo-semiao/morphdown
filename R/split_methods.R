@@ -73,9 +73,14 @@ groups_from_indexes <- function(x, indexes, final, single) {
     groups <- cumsum(abs(c(1, diff(cumsum(matches) > 0))))
   } else {
     matches[indexes] <- 1
-    groups <- cumsum(matches)
+    groups <- cumsum(matches) + 1
   }
 
   split(x, groups) %>%
     purrr::map2(seq_along(.), ~ structure(.x, is_final = final && .y %% 2 == 0))
 }
+# the .y %% 2 == 0 assumes that there is always an unmatched element at any
+# given block. This will always be true if the user does concatenates content
+# without an empty line between them. Caution: a split that uses
+# `border = c(x, y)`, with y > 0, might eat such empty line.
+# This can be avoided with final && grepl(pattern[[1]], .x).

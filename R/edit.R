@@ -28,7 +28,8 @@
 #'  (respectively) on the final punctuation of each clause in `keep`. Defaults
 #'  to none (`NULL`).
 #' @param sep What to add after the indexes specified by `breaks`.
-#' @param sep_n Add `sep` after the break + `sep_n` elements.
+#' @param sep_n Add `sep` after the break + `sep_n[1]` elements. `sep_n[2]`
+#'  is for before the break (when `sep_fragment = TRUE`).
 #' @param sep_fragment Instead of `sep`, should the elements specified by
 #'  `breaks` be encapsulated in a ".fragment" markdown block? (for revealjs).
 #' @param x The custom text to add.
@@ -40,18 +41,21 @@
 e <- function(
     keep = TRUE, end = "pbr", breaks = NULL,
     adds = NULL, subs = NULL,
-    modify = \(x) paste(x, collapse = " "),
-    sep = add_pause(), sep_n = 1) {
+    modify = \(x) x,
+    sep = add_pause(), sep_n = c(1, 1)) {
   msec_env <- rlang::caller_env()
 
   kept <- msec_env$sections[[msec_env$sec]][[msec_env$block]][keep]
   kept <- subs_and_adds(kept, adds, subs)
 
   if (!rlang::is_null(breaks)) {
-    kept <- append_vec(kept, glue("\n\n{sep}\n"), breaks, sep_n)
+    values <- paste0(c(sep, ""), collapse = "\n")
+    kept <- append_vec(kept, values, breaks, sep_n)
   }
 
-  c(modify(kept), get_end(end))
+  modify(kept) %>%
+    `if`(rlang::is_null(breaks), paste0(., collapse = ""), .) %>% #if no line added, rejoin clauses
+    c(get_end(end))
 }
 
 
@@ -61,7 +65,7 @@ div <- function(
     keep = TRUE, end = "pbr", breaks = NULL,
     adds = NULL, subs = NULL,
     modify = \(x) x,
-    sep = add_pause(), sep_n = 1, sep_fragment = FALSE) {
+    sep = add_pause(), sep_n = c(1, 1), sep_fragment = FALSE) {
   msec_env <- rlang::caller_env()
 
   kept <- msec_env$sections[[msec_env$sec]][[msec_env$block]][keep]
@@ -71,7 +75,7 @@ div <- function(
     values <- if (sep_fragment) { #add .fragment (pause) encapsuling each break
       c(":::::\n", "\n:::::{.fragment}")
     } else {
-      glue("\n\n{sep}\n")
+      paste0(c("\n", sep, "\n"), collapse = "")
     }
     kept <- append_vec(kept, values, breaks, n = sep_n)
   }
@@ -104,7 +108,7 @@ add_custom <- function(x, end = "pbr") {
 #' @rdname editing
 #' @export
 add_pause <- function(br = TRUE, trailing = TRUE) {
-  base <- c(". . .", "", if (br) add_br(TRUE))
+  base <- c(". . .", "", if (br) add_br(FALSE))
   if (trailing) c("", base) else base
 }
 
@@ -115,6 +119,8 @@ add_br <- function(trailing = TRUE) {
   if (trailing) c("", base) else base
 }
 
+
+# Helper functions:
 
 # Additions and substitutions to each character element
 #' @keywords internal

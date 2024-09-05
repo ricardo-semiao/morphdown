@@ -54,7 +54,9 @@ morph_sec <- function(..., head_lv = NULL) {
   head_lv <- head_lv %||% mdoc_env$head_lv
 
   b_plans <- rlang::enexprs(...)
-  b_plans$head1 <- b_plans$head1 %||% add_cur_head(head_lv)
+  if (rlang::is_null(b_plans$head1)) {
+    b_plans <- c(list(head1 = add_cur_head(head_lv)), b_plans)
+  }
 
   result_sec <- list()
   for (b in seq_along(b_plans)) {

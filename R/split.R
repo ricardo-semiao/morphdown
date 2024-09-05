@@ -115,7 +115,7 @@ get_split_args <- function(sec_level, clauses_pat) {
     ),
     list(split_after, #finally, separate each remaining line (match everything)
       pat = "^",
-      final = TRUE
+      final = FALSE
     ),
     list( #lastly, separate each clause
       function(x, pat) {
