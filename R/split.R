@@ -97,7 +97,7 @@ get_split_args <- function(sec_level, clauses_pat) {
       final = FALSE
     ),
     list(split_between_12, #separate code and md blocks
-      pat = c("^(:{1,3}|`{3}) *\\{.*\\}$", "^(:{1,3}|`{3}) *$"),
+      pat = c("^(:{3,}|`{3}) *\\{.*\\}$", "^(:{3,}|`{3}) *$"),
       final = TRUE
     ),
     list(split_between_11, #separate md tables
@@ -106,7 +106,7 @@ get_split_args <- function(sec_level, clauses_pat) {
       final = TRUE
     ),
     list(split_on_repeated, #separate lists
-      pat = "^[ \t]*([-+*] )|([0-9]+\\. )",
+      pat = "(^[ \t]*[-+*] )|(^[ \t]*[0-9]+\\. )",
       final = TRUE
     ),
     list(split_between_12, #separate raw html blocks

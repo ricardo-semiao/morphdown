@@ -34,11 +34,13 @@ split_between_11 <- function(x, pat, border = c(0, 0), final) {
 # Split character vector on groups of repeated matches
 #' @keywords internal
 split_on_repeated <- function(x, pat, border = c(0, 0), final) {
-  indexes <- list(grep(pat, x))
-  if (length(indexes[[1]]) == 0) return(x)
+  matches <- grep(pat, x)
+  if (length(matches) == 0) return(x)
 
-  indexes[[2]] <- indexes[[1]][length(indexes[[1]])]
-  indexes[[1]] <- indexes[[1]][1]
+  indexes <- list(
+    matches[c(TRUE, which(c(FALSE, diff(matches) > 1)))],
+    matches[c(which(c(FALSE, (diff(matches) > 1)[-1], TRUE)))]
+  )
 
   indexes <- index_add_border(indexes, border, "both")
   groups_from_indexes(x, indexes, final, single = FALSE)
@@ -69,8 +71,12 @@ groups_from_indexes <- function(x, indexes, final, single) {
 
   if (!single) {
     matches[indexes[[1]]] <- 1
-    matches[indexes[[2]] + 1] <- -1
-    groups <- cumsum(abs(c(1, diff(cumsum(matches) > 0))))
+    matches[indexes[[2]]] <- -1
+    frontier <- c(1, diff(cumsum(matches) > 0))
+    ends <- which(frontier == -1)
+    frontier[ends] <- 0
+    frontier[ends + 1] <- -1
+    groups <- cumsum(abs(frontier))
   } else {
     matches[indexes] <- 1
     groups <- cumsum(matches) + 1
