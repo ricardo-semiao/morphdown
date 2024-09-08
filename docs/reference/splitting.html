@@ -71,7 +71,13 @@ section/block with the plan functions of the package.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">split_sections</span><span class="op">(</span><span class="va">x</span>, str_pattern <span class="op">=</span> <span class="cn">NULL</span>, split_sec_lim <span class="op">=</span> <span class="fl">3</span>, split_args <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">split_sections</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  sec_lv <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  replacements_pat <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  split_args <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  clauses_sep <span class="op">=</span> <span class="st">".:;!?"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -83,22 +89,27 @@ section/block with the plan functions of the package.</p>
 text from an Rmd file.</p></dd>
 
 
-<dt id="arg-str-pattern">str_pattern<a class="anchor" aria-label="anchor" href="#arg-str-pattern"></a></dt>
+<dt id="arg-sec-lv">sec_lv<a class="anchor" aria-label="anchor" href="#arg-sec-lv"></a></dt>
+<dd><p>An integer specifying the maximum heading size (number)
+of "#" to be considered. Sub-sections lower than that won't be split.</p></dd>
+
+
+<dt id="arg-replacements-pat">replacements_pat<a class="anchor" aria-label="anchor" href="#arg-replacements-pat"></a></dt>
 <dd><p>A named vector where names are patterns to match in
 the document's text and values are the replacements for those patterns.
 Passed to the <code>pattern</code> argument of <a href="https://stringr.tidyverse.org/reference/str_replace.html" class="external-link">str_replace_all</a>.
 Defaults to no substitution.</p></dd>
 
 
-<dt id="arg-split-sec-lim">split_sec_lim<a class="anchor" aria-label="anchor" href="#arg-split-sec-lim"></a></dt>
-<dd><p>An integer specifying the maximum heading size (number)
-of "#" to be considered. Sub-sections lower than that won't be split.</p></dd>
-
-
 <dt id="arg-split-args">split_args<a class="anchor" aria-label="anchor" href="#arg-split-args"></a></dt>
 <dd><p>A list of 'splits' to separate the sections and blocks.
-See the source code of <code>morphdown:::apply_splits</code> for the default splits,
-and <code>morphdown:::split_match</code> to see how they work.</p></dd>
+See the source code of <code>morphdown:::get_split_args()</code> for the default
+splits.</p></dd>
+
+
+<dt id="arg-clauses-sep">clauses_sep<a class="anchor" aria-label="anchor" href="#arg-clauses-sep"></a></dt>
+<dd><p>A string with which characters to consider when splitting
+the clauses of a text expression. Defaults to ".:;!?".</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -115,7 +126,7 @@ in the plan functions.</p>
     </div>
 
   <footer id="site-footer"><div>
-          <p>Esta página foi feita com <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>.</p>
+          <p>Page built on <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>, with <a href="https://github.com/ricardo-semiao/ricardo-semiao/tree/main/themes/rspkgdown" class="external-link">rspkgdown</a> theme.</p>
       </div>
   </footer><script src="/site_assets/site_structure.js"></script></body></html>
 

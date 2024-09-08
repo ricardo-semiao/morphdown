@@ -10,14 +10,17 @@
 #'
 #' @param x A character vector containing the path to an Rmd file or the actual
 #'  text from an Rmd file.
-#' @param sec_level An integer specifying the maximum heading size (number)
+#' @param sec_lv An integer specifying the maximum heading size (number)
 #'  of "#" to be considered. Sub-sections lower than that won't be split.
 #' @param replacements_pat A named vector where names are patterns to match in
 #'  the document's text and values are the replacements for those patterns.
 #'  Passed to the `pattern` argument of \link[stringr]{str_replace_all}.
 #'  Defaults to no substitution.
 #' @param split_args A list of 'splits' to separate the sections and blocks.
-#'  See the source code of `morphdown:::get_split_args` for the default splits.
+#'  See the source code of `morphdown:::get_split_args()` for the default
+#'  splits.
+#' @param clauses_sep A string with which characters to consider when splitting
+#'  the clauses of a text expression. Defaults to ".:;!?".
 #'
 #' @return A named list of character vectors. Each vector is a section named
 #'  `s*`. Each section has blocks named `b*`. Use those names to refer to each
@@ -25,7 +28,7 @@
 #'
 #' @export
 split_sections <- function(
-    x, sec_level = 3,
+    x, sec_lv = 3,
     replacements_pat = NULL, split_args = NULL,
     clauses_sep  = ".:;!?") {
   doc_raw <- if (is_path(x)) readLines(x) else x
@@ -37,16 +40,18 @@ split_sections <- function(
     doc_raw <- stringr::str_replace_all(doc_raw, replacements_pat)
   }
 
-  a = apply_splits(doc_raw, split_args, sec_level, clauses_pat = pat) #%>%
-  b = split_after(a, pat = glue("^#{{1,{sec_level}}} "), final = FALSE) #%>% #separate sections
-  create_sections_names(b)
+  splits <- apply_splits(doc_raw, split_args, sec_lv, clauses_pat = pat)
+
+  splits %>%
+    create_sections_names() %>%
+    purrr::map(~ structure(.x, "is_final" = NULL))
 }
 
 
-# Apply an Ordered Succession of Splits to Character Vector
+#' Apply an Ordered Succession of Splits to Character Vector
 #' @keywords internal
-apply_splits <- function(doc_raw, split_args, sec_level, clauses_pat) {
-  split_args <- split_args %||% get_split_args(sec_level, clauses_pat)
+apply_splits <- function(doc_raw, split_args, sec_lv, clauses_pat) {
+  split_args <- split_args %||% get_split_args(sec_lv, clauses_pat)
   splits <- list(structure(doc_raw, is_final = FALSE))
 
   for (args in split_args) {
@@ -58,7 +63,9 @@ apply_splits <- function(doc_raw, split_args, sec_level, clauses_pat) {
     splits <- purrr::list_flatten(splits)
   }
 
-  splits
+  # Clean attr and un-flatten sections:
+  splits <- purrr::map(splits, ~ structure(.x, "is_final" = NULL))
+  split_after(splits, pat = glue("^#{{1,{sec_lv}}} "), final = NULL)
 }
 
 
@@ -74,7 +81,7 @@ split_clauses <- function(x, pat) {
 
 # Helper functions:
 
-# Create pretty names for the sections and blocks
+#' Create pretty names for the sections and blocks
 #' @keywords internal
 create_sections_names <- function(sections) {
   purrr::map(sections, function(sec) {
@@ -88,36 +95,45 @@ create_sections_names <- function(sections) {
     purrr::set_names(paste0("s", seq_along(.)))
 }
 
-# Function to get the standard `split_args`
+#' Function to get the standard `split_args`
 #' @keywords internal
-get_split_args <- function(sec_level, clauses_pat) {
+get_split_args <- function(sec_lv, clauses_pat) {
   list(
-    list(split_after, #separate by headers
-      pat = glue("^#{{1,{sec_level}}} "),
+    headers = list(split_after, #separate by headers
+      pat = glue("^#{{1,{sec_lv}}} "),
       final = FALSE
     ),
-    list(split_between_12, #separate code and md blocks
+    blocks = list(split_between_12, #separate code and md blocks
       pat = c("^(:{3,}|`{3}) *\\{.*\\}$", "^(:{3,}|`{3}) *$"),
       final = TRUE
     ),
-    list(split_between_11, #separate md tables
+    tables = list(split_between_11, #separate md tables
       pat = "(^[-|+][-|+:= ]+$)|^(\\|.+\\| *)+$",
       border = c(1, 0),
       final = TRUE
     ),
-    list(split_on_repeated, #separate lists
+    lists = list(split_on_repeated, #separate lists
       pat = "(^[ \t]*[-+*] )|(^[ \t]*[0-9]+\\. )",
       final = TRUE
     ),
-    list(split_between_12, #separate raw html blocks
+    html = list(split_between_12, #separate raw html blocks
       pat = c("^<.+>", "</.+>$"),
       final = TRUE
     ),
-    list(split_after, #finally, separate each remaining line (match everything)
-      pat = "^",
+    lines = list( #finally, separate on remaining empty lines, and collapse
+      function(x, pat, final) {
+        split_on_single(x, pat = pat, final = TRUE) %>%
+          purrr::map(function(s) {
+            if (!attr(s, "is_final")) {
+              s <- paste0(s, collapse = " ")
+            }
+            structure(s, "is_final" = final)
+          })
+      },
+      pat = "^$",
       final = FALSE
     ),
-    list( #lastly, separate each clause
+    clauses = list( #lastly, separate each clause
       function(x, pat) {
         if (length(x) == 1 && !(x == "" || grepl("^#", x))) {
           split_clauses(x, pat)

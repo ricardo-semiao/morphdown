@@ -4,16 +4,19 @@
 #' @rdname editing
 #'
 #' @description
-#' These functions are assigned to blocks inside `plan_sec(`b* = fun(...)`)`.
-#'  See \link[morphdown]{planning}. The functions `e` and `div` edit existing
-#'  blocks:
+#' These functions are assigned to blocks inside `plan_sec(b* = fun(...))`.
+#'  See \link[morphdown]{morphing}. The functions `e()` and `div()` edit
+#'  existing blocks:
 #'
-#' - `e` is used on single-lines of text, that have been split into clauses.
-#' - `div` is used on multi-line blocks of text, that have been split by lines.
+#' - `e()` is used on single-lines of text, that have been split into clauses.
+#' - `div()` is used on multi-line blocks of text, that have been split by
+#'  lines.
 #'
-#' @param keep Indexes of the clauses (for `e`) or lines (for `div`) to keep.
+#' @param keep Indexes of the clauses (for `e()`) or lines (for `div()`) to keep.
 #'  Defaults to all (`NULL`).
-#' @param end Character specifying what to add at the end of the block:
+#' @param end Character specifying what to add at the end of the block, passed
+#'  to `get_end()`. The default value is whatever was passed to the
+#'  `morph_sec()`'s `end` argument. Possible values are:
 #'  - `'pbr'` for `add_pause()` (the default);
 #'  - `'p'` for `add_pause(FALSE)`;
 #'  - `'br'` for `add_br()`;
@@ -24,6 +27,7 @@
 #' @param adds,subs Character vector specifying additions or substitutions
 #'  (respectively) on the final punctuation of each clause in `keep`. Defaults
 #'  to none (`NULL`).
+#' @param modify Function to to the block, after the base manipulations.
 #' @param sep What to add after the indexes specified by `breaks`.
 #' @param sep_n Add `sep` after the break + `sep_n[1]` elements. `sep_n[2]`
 #'  is for before the break (when `sep_fragment = TRUE`).
@@ -32,7 +36,7 @@
 #'
 #' @export
 e <- function(
-    keep = NULL, end = "pbr", breaks = NULL,
+    keep = NULL, end = NULL, breaks = NULL,
     adds = NULL, subs = NULL,
     modify = \(x) x,
     sep = add_pause(), sep_n = 1) {
@@ -40,6 +44,7 @@ e <- function(
 
   original <- msec_env$sections[[msec_env$sec]][[msec_env$block]]
   keep <- keep %||% seq_along(original)
+  end <- end %||% msec_env$end
 
   kept <- original[keep]
   kept <- subs_and_adds(kept, adds, subs)
@@ -56,7 +61,7 @@ e <- function(
 #' @rdname editing
 #' @export
 div <- function(
-    keep = NULL, end = "pbr", breaks = NULL,
+    keep = NULL, end = NULL, breaks = NULL,
     adds = NULL, subs = NULL,
     modify = \(x) x,
     sep = add_pause(), sep_n = NULL, sep_fragment = FALSE) {
@@ -65,6 +70,7 @@ div <- function(
 
   original <- msec_env$sections[[msec_env$sec]][[msec_env$block]]
   keep <- keep %||% seq_along(original)
+  end <- end %||% msec_env$end
 
   kept <- original[keep]
   kept <- subs_and_adds(kept, adds, subs)
@@ -88,7 +94,7 @@ div <- function(
 
 # Helper functions:
 
-# Additions and substitutions to each character element
+#' Additions and substitutions to each character element
 #' @keywords internal
 subs_and_adds <- function(kept, adds, subs) {
   if (!rlang::is_null(adds)) {
