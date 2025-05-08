@@ -14,8 +14,9 @@ The morphdown R package is being developed to provide a way to
 programmatically change the structure of R Markdown files. For example,
 to turn a ‘full text’ file into a summarized slide presentation.
 
-The package turns raw .Rdm files into a R list of sections and their
-blocks, which can then be targeted individually by editing functions.
+The package turns raw markdown (`.md`, `.rmd`, `.qmd`, etc.) files into
+a R list of sections and their blocks, which can then be targeted
+individually by editing functions.
 
 The morphing becomes much more declarative and documented than manually
 adapting the files, increasing speed, but most important,becoming more
