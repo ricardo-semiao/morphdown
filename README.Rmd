@@ -16,6 +16,8 @@ The package turns raw markdown (`.md`, `.rmd`, `.qmd`, etc.) files into a R list
 
 The morphing becomes much more declarative and documented than manually adapting the files, increasing speed, but most important,becoming more robust to changes in the source material.
 
+Check an example of the package in the last section of this page.
+
 I created this tool to turn the chapters of my book [RFCD](https://ricardo-semiao.github.io/rfcd/) into slide presentations for the trainings I administer.
 
 **Disclaimer:** this package is in the early most stage of life. It hasn't been thoroughly tested and can present several bugs. I don't recommend using it for large-scale projects, yet.
@@ -33,6 +35,26 @@ You can install the development version of morphdown like so:
 # install.packages("devtools")
 devtools::install_github("ricardo-semiao/morphdown")
 ```
+
+
+## Development Comments
+
+This package currently has some drawbacks:
+
+- It acts on a very unpredictable input, with many possible ways to write markdown, and each flavor having features that need to be accounted for.
+- It is most useful after the source material's structure is mostly fixed, and mainly small changes in the writing style will happen.
+
+A more robust solution, that wouldn't need major redoing after structural changes, would need a interactive editor, that could hold memory of the changes made. This could be achieved with Shiny, which I have experience on, but I don't have time to work on it at the moment.
+
+Because of these reasons this package is not my main focus at the moment. If you need support to your custom markdown writing style and/or markdown flavor features, I suggest forking the package and adapting it to your needs. But also contact me, so I learn about your demands.
+
+Some of the more important features I plan to add in the future are:
+
+- Add support for lists with empty lines between the items.
+- Add an option to remove double empty lines in the final output.
+- Add testing with thestthat3.
+- Add error handling with rlang/cli, and more informative messages.
+
 
 ## Example
 
