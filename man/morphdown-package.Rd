@@ -6,7 +6,7 @@
 \alias{morphdown-package}
 \title{morphdown: Programmatically Change R Markdown Files}
 \description{
-An R package to programmatically change the structure of R Markdown files.
+Programmatically change the structure of markdown files. Process a markdown file into a comprehensible list of blocks, and apply changes to each, through a plan that is efficient and robust to changes in the original file.
 }
 \seealso{
 Useful links:

@@ -10,3 +10,4 @@
 ^\.github$
 ^template$
 ^site_assets$
+^dev\.R$

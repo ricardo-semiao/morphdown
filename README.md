@@ -32,10 +32,13 @@ for the trainings I administer.
 hasn’t been thoroughly tested and can present several bugs. I don’t
 recommend using it for large-scale projects, yet.
 
-Please report any problems in my email (below), or as a github issue.
-Thank you!
+Please report any problems as a GitHub
+[issue](https://github.com/ricardo-semiao/morphdown/issues). Other
+comments can be posted as a GitHub
+[discussion](https://github.com/ricardo-semiao/morphdown/discussions),
+or sent in my email below. Thank you!
 
-Author: Ricardo Semião e Castro (ricardo.semiao@outlook).
+Author: Ricardo Semião e Castro (<ricardo.semiao@outlook>).
 
 ## Installation
 
@@ -70,8 +73,17 @@ Some of the more important features I plan to add in the future are:
 
 - Add support for lists with empty lines between the items.
 - Add an option to remove double empty lines in the final output.
-- Add testing with thestthat3.
+- Add testing with thestthat 3.
 - Add error handling with rlang/cli, and more informative messages.
+
+Note that this package:
+
+- Follows the [tydiverse style guide](https://style.tidyverse.org/).
+  - Using the [styler](https://styler.r-lib.org/) and
+    [lintr](https://lintr.r-lib.org/) packages for style consistency.
+- Uses [testthat 3](https://testthat.r-lib.org/) for automate tests.
+- Uses [rlang](https://rlang.r-lib.org/) frameworks for *tidy eval* and
+  *rlang errors*.
 
 ## Example
 
