@@ -1,4 +1,5 @@
-url: https://ricardo-semiao.github.io/morphdown/
+url: "." #https://ricardo-semiao.github.io/morphdown/
+
 template:
   bootstrap: 5
   package: rspkgdown
